@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Business Model Canvas</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1a2e;
+    --paper: #f5f0e8;
+    --accent: #e63946;
+    --accent2: #457b9d;
+    --accent3: #2a9d8f;
+    --light: #ffffff;
+    --border: #1a1a2e;
+    --muted: #8a8a9a;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 32px 20px;
+  }
+
+  header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 6vw, 64px);
+    letter-spacing: 2px;
+    color: var(--ink);
+    line-height: 1;
+  }
+
+  header .sub {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 300;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .project-bar {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .project-bar label {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 140px;
+  }
+
+  .project-bar input {
+    border: 1.5px solid var(--border);
+    background: var(--light);
+    padding: 8px 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .project-bar input:focus { border-color: var(--accent); }
+
+  /* CANVAS GRID */
+  .canvas {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: auto auto auto;
+    border: 2px solid var(--border);
+    background: var(--border);
+    gap: 2px;
+  }
+
+  .block {
+    background: var(--light);
+    padding: 14px 14px 10px;
+    display: flex;
+    flex-direction: column;
+    min-height: 180px;
+    position: relative;
+  }
+
+  /* Grid placement */
+  .key-partners      { grid-column: 1; grid-row: 1 / 3; }
+  .key-activities    { grid-column: 2; grid-row: 1; }
+  .key-resources     { grid-column: 2; grid-row: 2; }
+  .value-proposition { grid-column: 3; grid-row: 1 / 3; }
+  .customer-relationships { grid-column: 4; grid-row: 1; }
+  .channels          { grid-column: 4; grid-row: 2; }
+  .customer-segments { grid-column: 5; grid-row: 1 / 3; }
+  .cost-structure    { grid-column: 1 / 4; grid-row: 3; }
+  .revenue-streams   { grid-column: 4 / 6; grid-row: 3; }
+
+  .block-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--ink);
+  }
+
+  .block-title .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .key-partners      .dot { background: #6c63ff; }
+  .key-activities    .dot { background: var(--accent2); }
+  .key-resources     .dot { background: var(--accent3); }
+  .value-proposition .dot { background: var(--accent); }
+  .customer-relationships .dot { background: #f4a261; }
+  .channels          .dot { background: #e9c46a; }
+  .customer-segments .dot { background: var(--accent2); }
+  .cost-structure    .dot { background: #6c63ff; }
+  .revenue-streams   .dot { background: var(--accent3); }
+
+  .block-hint {
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 10px;
+    font-weight: 300;
+    line-height: 1.4;
+  }
+
+  .block textarea {
+    flex: 1;
+    border: 1px dashed #ccc;
+    padding: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--ink);
+    resize: none;
+    background: #fafafa;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+    line-height: 1.6;
+    min-height: 100px;
+  }
+
+  .block textarea:focus {
+    border-color: var(--accent);
+    background: #fff;
+  }
+
+  .block textarea::placeholder {
+    color: #bbb;
+    font-style: italic;
+  }
+
+  /* Value proposition highlight */
+  .value-proposition {
+    background: #fff8f5;
+    border-left: 3px solid var(--accent);
+  }
+
+  .value-proposition .block-title { color: var(--accent); font-size: 15px; }
+
+  /* Bottom row */
+  .cost-structure { background: #f5f8ff; }
+  .revenue-streams { background: #f5fffc; }
+
+  /* Actions bar */
+  .actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 2px;
+    font-size: 14px;
+    padding: 10px 24px;
+    border: 2px solid var(--ink);
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn:hover { background: var(--ink); color: var(--paper); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: white; }
+  .btn.primary:hover { background: #c1121f; border-color: #c1121f; }
+
+  .legend {
+    margin-top: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  @media (max-width: 768px) {
+    .canvas {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: unset;
+    }
+    .key-partners, .value-proposition, .customer-segments,
+    .cost-structure, .revenue-streams,
+    .key-activities, .key-resources,
+    .customer-relationships, .channels {
+      grid-column: unset;
+      grid-row: unset;
+    }
+    .block { min-height: 140px; }
+  }
+
+  @media print {
+    body { padding: 10px; }
+    .actions, .project-bar { display: none; }
+    .block textarea { border: 1px solid #ddd; background: white; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Business Model Canvas</h1>
+  <span class="sub">— Osterwalder & Pigneur</span>
+</header>
+
+<div class="project-bar">
+  <label>Bedrijf / Project
+    <input type="text" placeholder="Naam van je bedrijf of idee">
+  </label>
+  <label>Ontworpen door
+    <input type="text" placeholder="Jouw naam">
+  </label>
+  <label>Datum
+    <input type="date">
+  </label>
+  <label>Versie
+    <input type="text" placeholder="v1.0">
+  </label>
+</div>
+
+<div class="canvas">
+
+  <!-- Key Partners -->
+  <div class="block key-partners">
+    <div class="block-title"><span class="dot"></span>Key Partners</div>
+    <div class="block-hint">Wie zijn je belangrijkste partners en leveranciers? Welke activiteiten voeren partners uit?</div>
+    <textarea placeholder="• Strategische allianties&#10;• Joint ventures&#10;• Leveranciers&#10;• Investeerders"></textarea>
+  </div>
+
+  <!-- Key Activities -->
+  <div class="block key-activities">
+    <div class="block-title"><span class="dot"></span>Key Activities</div>
+    <div class="block-hint">Welke kernactiviteiten zijn nodig om je waardepropositie te leveren?</div>
+    <textarea placeholder="• Productie&#10;• Probleemoplossing&#10;• Platform/netwerk beheer"></textarea>
+  </div>
+
+  <!-- Value Proposition -->
+  <div class="block value-proposition">
+    <div class="block-title"><span class="dot"></span>Value Proposition</div>
+    <div class="block-hint">Welke waarde lever je aan klanten? Welk probleem los je op? Aan welke behoefte voldoe je?</div>
+    <textarea placeholder="• Welk probleem los je op?&#10;• Welke behoefte vervul je?&#10;• Wat maakt jou uniek?&#10;• Prijs, kwaliteit, gemak, design, status..."></textarea>
+  </div>
+
+  <!-- Customer Relationships -->
+  <div class="block customer-relationships">
+    <div class="block-title"><span class="dot"></span>Customer Relationships</div>
+    <div class="block-hint">Welk type relatie verwachten klanten? Hoe onderhoud je die?</div>
+    <textarea placeholder="• Persoonlijke service&#10;• Zelfbediening&#10;• Communities&#10;• Co-creatie"></textarea>
+  </div>
+
+  <!-- Customer Segments -->
+  <div class="block customer-segments">
+    <div class="block-title"><span class="dot"></span>Customer Segments</div>
+    <div class="block-hint">Voor wie creëer je waarde? Wie zijn je belangrijkste klanten?</div>
+    <textarea placeholder="• Massa markt&#10;• Niche markt&#10;• Gesegmenteerd&#10;• Multi-sided platform&#10;• B2B / B2C"></textarea>
+  </div>
+
+  <!-- Key Resources -->
+  <div class="block key-resources">
+    <div class="block-title"><span class="dot"></span>Key Resources</div>
+    <div class="block-hint">Welke middelen heb je nodig? Fysiek, intellectueel, menselijk, financieel?</div>
+    <textarea placeholder="• Fysiek (machines, gebouwen)&#10;• Intellectueel (IP, data)&#10;• Menselijk (talent)&#10;• Financieel"></textarea>
+  </div>
+
+  <!-- Channels -->
+  <div class="block channels">
+    <div class="block-title"><span class="dot"></span>Channels</div>
+    <div class="block-hint">Hoe bereik je klanten? Hoe lever je je waardepropositie?</div>
+    <textarea placeholder="• Eigen kanalen (webshop, winkel)&#10;• Partner kanalen (retailers)&#10;• Online / offline&#10;• Direct / indirect"></textarea>
+  </div>
+
+  <!-- Cost Structure -->
+  <div class="block cost-structure">
+    <div class="block-title"><span class="dot"></span>Cost Structure</div>
+    <div class="block-hint">Wat zijn de belangrijkste kosten? Welke resources/activiteiten zijn het duurst?</div>
+    <textarea placeholder="• Vaste kosten (huur, salarissen)&#10;• Variabele kosten&#10;• Schaalvoordelen&#10;• Kostgestuurde vs. waardegestuurde structuur"></textarea>
+  </div>
+
+  <!-- Revenue Streams -->
+  <div class="block revenue-streams">
+    <div class="block-title"><span class="dot"></span>Revenue Streams</div>
+    <div class="block-hint">Hoe verdien je geld? Welke waarde zijn klanten bereid te betalen?</div>
+    <textarea placeholder="• Verkoop&#10;• Abonnement / SaaS&#10;• Licenties&#10;• Advertenties&#10;• Commissie / marketplace&#10;• Freemium"></textarea>
+  </div>
+
+</div>
+
+<div class="actions">
+  <button class="btn primary" onclick="window.print()">🖨 Afdrukken / Opslaan als PDF</button>
+  <button class="btn" onclick="clearAll()">↺ Leegmaken</button>
+  <button class="btn" onclick="saveData()">💾 Opslaan (lokaal)</button>
+  <button class="btn" onclick="loadData()">📂 Laden</button>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#6c63ff"></div> Partners & Kosten</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#457b9d"></div> Activiteiten & Middelen</div>
+  <div class="legend-dot" style="background:transparent; width:0"></div>
+  <div class="legend-item"><div class="legend-dot" style="background:#e63946"></div> Waardepropositie (kern)</div>
+  <div class="legend-dot" style="background:transparent; width:0"></div>
+  <div class="legend-item"><div class="legend-dot" style="background:#f4a261"></div> Klantrelaties & Kanalen</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#2a9d8f"></div> Segmenten & Inkomsten</div>
+</div>
+
+<script>
+  function clearAll() {
+    if (confirm('Weet je zeker dat je alles wilt wissen?')) {
+      document.querySelectorAll('textarea, input[type="text"], input[type="date"]').forEach(el => el.value = '');
+    }
+  }
+
+  function saveData() {
+    const data = {};
+    document.querySelectorAll('textarea').forEach((el, i) => data['ta_' + i] = el.value);
+    document.querySelectorAll('input').forEach((el, i) => data['inp_' + i] = el.value);
+    localStorage.setItem('bmc_data', JSON.stringify(data));
+    alert('Canvas opgeslagen!');
+  }
+
+  function loadData() {
+    const raw = localStorage.getItem('bmc_data');
+    if (!raw) return alert('Geen opgeslagen data gevonden.');
+    const data = JSON.parse(raw);
+    document.querySelectorAll('textarea').forEach((el, i) => { if (data['ta_' + i]) el.value = data['ta_' + i]; });
+    document.querySelectorAll('input').forEach((el, i) => { if (data['inp_' + i]) el.value = data['inp_' + i]; });
+    alert('Canvas geladen!');
+  }
+
+  // Auto-load on start
+  window.onload = () => {
+    const raw = localStorage.getItem('bmc_data');
+    if (raw) {
+      const data = JSON.parse(raw);
+      document.querySelectorAll('textarea').forEach((el, i) => { if (data['ta_' + i]) el.value = data['ta_' + i]; });
+      document.querySelectorAll('input').forEach((el, i) => { if (data['inp_' + i]) el.value = data['inp_' + i]; });
+    }
+  };
+</script>
+</body>
+</html>
